@@ -53,14 +53,12 @@ if %errorlevel% neq 0 (
         %VSCODE_INSTALLER% /silent /mergetasks=!runcode
         REM Add VS Code to PATH for current user
         set VSCODE_PATH="%LocalAppData%\Programs\Microsoft VS Code\bin"
-        if exist "%VSCODE_PATH%\code.cmd" (
-            setx PATH "%PATH%;%VSCODE_PATH%"
+        REM if exist "%VSCODE_PATH%\code.cmd" (
+            REM set PATH="%PATH%;%VSCODE_PATH%"
             REM Install Jupyter extensions for VS Code
             echo Installing Jupyter extensions for VS Code...
-
-            call code --install-extension ms-toolsai.jupyter  --install-extension ms-toolsai.jupyter-renderers  --force
+            call %VSCODE_PATH%\code --install-extension ms-toolsai.jupyter  --install-extension ms-toolsai.jupyter-renderers  --force
             )
-        
         del %VSCODE_INSTALLER%
     ) else (
         echo Error: Failed to download VS Code installer.
