@@ -51,13 +51,9 @@ if %errorlevel% neq 0 (
         echo Installing VS Code...
         REM /silent prevents VS Code from launching automatically after installation
         %VSCODE_INSTALLER% /silent /mergetasks=!runcode
-        REM Add VS Code to PATH for current user
-        set VSCODE_PATH="%LocalAppData%\Programs\Microsoft VS Code\bin"
-        REM if exist "%VSCODE_PATH%\code.cmd" (
-            REM set PATH="%PATH%;%VSCODE_PATH%"
             REM Install Jupyter extensions for VS Code
             echo Installing Jupyter extensions for VS Code...
-            call %VSCODE_PATH%\code --install-extension ms-toolsai.jupyter  --install-extension ms-toolsai.jupyter-renderers  --force
+            call "%LocalAppData%\Programs\Microsoft VS Code\bin\code" --install-extension ms-toolsai.jupyter  --install-extension ms-toolsai.jupyter-renderers  --force
             )
         del %VSCODE_INSTALLER%
     ) else (
