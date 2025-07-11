@@ -9,7 +9,7 @@ REM Set installer filenames
 set PYTHON_INSTALLER=python312-installer.exe
 set VSCODE_INSTALLER=VSCodeSetup.exe
 
-echo [1/8] Checking for Python 3.12...
+echo [1/3] Checking for Python 3.12...
 where python >nul 2>nul
 if %errorlevel% neq 0 (
     echo Python not found. Downloading Python 3.12 installer...
@@ -21,7 +21,6 @@ if %errorlevel% neq 0 (
         del %PYTHON_INSTALLER%
     ) else (
         echo Error: Failed to download Python installer.
-        exit /b 1
     )
 ) else (
     python --version | findstr "3.12" >nul
@@ -34,14 +33,13 @@ if %errorlevel% neq 0 (
             del %PYTHON_INSTALLER%
         ) else (
             echo Error: Failed to download Python installer.
-            exit /b 1
         )
     ) else (
         echo Python 3.12 is installed.
     )
 )
 
-echo [2/8] Checking for Visual Studio Code...
+echo [2/3] Checking for Visual Studio Code...
 REM after installation VS code should not launch automatically, so we use /silent
 where code >nul 2>nul
 if %errorlevel% neq 0 (
@@ -58,63 +56,25 @@ if %errorlevel% neq 0 (
         del %VSCODE_INSTALLER%
     ) else (
         echo Error: Failed to download VS Code installer.
-        exit /b 1
     )
 ) else (
     echo VS Code is installed.
 )
 
 
-echo [3/8] Refreshing PATH environment variable...
+echo [3/3] Refreshing PATH environment variable...
 REM refresh path environment variable using PowerShell
 REM This ensures that the newly installed Python and VS Code are recognized in the PATH.
-powershell -Command "setx PATH $env:PATH; $env:PATH = [System.Environment]::GetEnvironmentVariable('PATH', 'Machine')+';'+[System.Environment]::GetEnvironmentVariable('Path', 'User')"
+powershell -Command "set PATH $env:PATH; $env:PATH = [System.Environment]::GetEnvironmentVariable('PATH', 'Machine')+';'+[System.Environment]::GetEnvironmentVariable('Path', 'User')"
 
 
 echo PATH refreshed.
 
-echo [4/8] Printing Python version...
+echo  Printing Python version...
 python --version
 if %errorlevel% neq 0 (
     echo Error: Unable to run Python.
-    exit /b 1
 )
-
-echo [5/8] Creating virtual environment...
-python -m venv venv
-if %errorlevel% neq 0 (
-    echo Error: Failed to create virtual environment.
-    exit /b 1
-)
-
-echo [6/8] Activating virtual environment...
-call venv\Scripts\activate.bat
-if %errorlevel% neq 0 (
-    echo Error: Failed to activate virtual environment.
-    exit /b 1
-)
-
-REM Ensure pip is up-to-date
-echo Upgrading pip...
-python -m pip install --upgrade pip
-
-REM install langgraph
-echo [7/8] Installing lang-graph...
-pip install langgraph
-if %errorlevel% neq 0 (
-    echo Error: Failed to install lang-graph.
-    exit /b 1
-)
-
-REM install jupyter notebook
-
-echo [8/8] Installing jupyter notebook...
-pip install jupyter notebook
-if %errorlevel% neq 0 (
-    echo Error: Failed to install jupyter notebook.
-    exit /b 1
-)
-
 echo Setup completed successfully!
 pause
 endlocal
